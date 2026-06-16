@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌟 Room 3B — Our Class Website!</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --white: #FFFFFF;
+    --light: #F8F9FF;
+    --dark: #2C3E50;
+    --mid: #546E7A;
+    --radius: 16px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.12);
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, #E3F2FD 0%, #F3E5F5 50%, #E8F5E9 100%);
+    min-height: 100vh;
+    color: var(--dark);
+  }
+
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ── LOGIN ── */
+  #login-screen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .login-hero { text-align: center; margin-bottom: 32px; }
+  .login-hero .emoji-stack {
+    font-size: 64px; line-height: 1; margin-bottom: 12px; display: block;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .login-hero h1 { font-size: 32px; font-weight: 800; color: #5C35BF; letter-spacing: -0.5px; }
+  .login-hero p { font-size: 16px; color: var(--mid); margin-top: 6px; }
+
+  .login-card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 32px; width: 100%; max-width: 400px;
+  }
+  .login-card h2 {
+    font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--dark);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 14px; font-weight: 600; color: var(--mid); margin-bottom: 6px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 12px 16px; border: 2px solid #E8EAF6; border-radius: 10px;
+    font-size: 16px; outline: none; transition: border-color 0.2s; background: #FAFAFA;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: #7C4DFF; background: var(--white); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 24px; border-radius: 12px; font-size: 16px; font-weight: 700;
+    cursor: pointer; border: none; transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: linear-gradient(135deg, #7C4DFF, #5C35BF); color: white; width: 100%;
+    box-shadow: 0 4px 15px rgba(124,77,255,0.4);
+  }
+  .btn-primary:hover { box-shadow: 0 6px 20px rgba(124,77,255,0.5); }
+
+  .login-error {
+    background: #FFEBEE; color: #C62828; padding: 10px 14px; border-radius: 10px;
+    font-size: 14px; font-weight: 600; margin-top: 12px; display: none;
+  }
+
+  .login-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+  .login-tab {
+    flex: 1; padding: 10px; text-align: center; border-radius: 10px; cursor: pointer;
+    font-size: 14px; font-weight: 600; border: 2px solid #E8EAF6;
+    background: #FAFAFA; color: var(--mid); transition: all 0.2s;
+  }
+  .login-tab.active { background: #EDE7F6; border-color: #7C4DFF; color: #5C35BF; }
+
+  /* ── APP ── */
+  #app-screen { flex-direction: column; }
+
+  .topbar {
+    background: linear-gradient(135deg, #7C4DFF, #5C35BF); color: white;
+    padding: 0 24px; height: 60px; display: flex; align-items: center;
+    justify-content: space-between; box-shadow: 0 2px 12px rgba(124,77,255,0.3);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .user-chip {
+    background: rgba(255,255,255,0.2); border-radius: 20px; padding: 6px 14px;
+    font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px;
+  }
+  .admin-badge {
+    background: #FFD54F; color: #5D4037; font-size: 11px; font-weight: 800;
+    padding: 2px 8px; border-radius: 10px; letter-spacing: 0.5px;
+  }
+  .logout-btn {
+    background: rgba(255,255,255,0.2); border: none; color: white; border-radius: 8px;
+    padding: 6px 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+  }
+  .logout-btn:hover { background: rgba(255,255,255,0.3); }
+
+  /* ── NAV ── */
+  .nav-tabs {
+    background: white; border-bottom: 2px solid #F0F0F0; display: flex;
+    padding: 0 24px; gap: 4px; overflow-x: auto;
+  }
+  .nav-tab {
+    padding: 14px 20px; font-size: 15px; font-weight: 700; color: var(--mid);
+    cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px;
+    white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 7px;
+  }
+  .nav-tab:hover { color: #7C4DFF; }
+  .nav-tab.active { color: #7C4DFF; border-bottom-color: #7C4DFF; }
+  .nav-tab.admin-tab { color: #E65100; }
+  .nav-tab.admin-tab.active { color: #E65100; border-bottom-color: #E65100; }
+  .nav-tab.admin-tab:hover { color: #BF360C; }
+
+  .content { flex: 1; overflow-y: auto; padding: 24px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── HOME ── */
+  .home-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px; max-width: 900px; margin: 0 auto;
+  }
+  .home-card {
+    background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow);
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;
+  }
+  .home-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
+  .home-card .card-emoji { font-size: 52px; line-height: 1; }
+  .home-card h3 { font-size: 20px; font-weight: 800; color: var(--dark); }
+  .home-card p { font-size: 14px; color: var(--mid); line-height: 1.5; }
+  .home-card.purple { border-top: 4px solid #7C4DFF; }
+  .home-card.blue   { border-top: 4px solid #29B6F6; }
+  .home-card.green  { border-top: 4px solid #66BB6A; }
+  .home-card.orange { border-top: 4px solid #FFA726; }
+
+  .welcome-banner {
+    background: linear-gradient(135deg, #7C4DFF, #2979FF); color: white;
+    border-radius: var(--radius); padding: 28px 32px; margin-bottom: 28px;
+    max-width: 900px; margin-left: auto; margin-right: auto;
+  }
+  .welcome-banner h2 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+  .welcome-banner p { font-size: 16px; opacity: 0.9; }
+
+  /* ── CHAT ── */
+  .chat-container {
+    max-width: 720px; margin: 0 auto; background: white; border-radius: var(--radius);
+    box-shadow: var(--shadow); display: flex; flex-direction: column;
+    height: calc(100vh - 180px); min-height: 400px;
+  }
+  .chat-header {
+    background: linear-gradient(135deg, #29B6F6, #0288D1); color: white;
+    padding: 16px 20px; border-radius: var(--radius) var(--radius) 0 0;
+    display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px;
+  }
+  .online-dot { width: 10px; height: 10px; background: #69F0AE; border-radius: 50%; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+  .chat-messages {
+    flex: 1; overflow-y: auto; padding: 16px; display: flex;
+    flex-direction: column; gap: 12px; background: #F8F9FF;
+  }
+  .message { display: flex; gap: 10px; max-width: 80%; }
+  .message.mine { align-self: flex-end; flex-direction: row-reverse; }
+  .message-avatar {
+    width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 18px; flex-shrink: 0; background: #EDE7F6;
+  }
+  .message-bubble {
+    background: white; border-radius: 16px; padding: 10px 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08); position: relative;
+  }
+  .message.mine .message-bubble { background: linear-gradient(135deg, #7C4DFF, #5C35BF); color: white; }
+  .message-name { font-size: 12px; font-weight: 700; color: #7C4DFF; margin-bottom: 3px; }
+  .message.mine .message-name { display: none; }
+  .message-text { font-size: 15px; line-height: 1.4; }
+  .message-time { font-size: 11px; color: rgba(0,0,0,0.35); margin-top: 4px; text-align: right; }
+  .message.mine .message-time { color: rgba(255,255,255,0.6); }
+  .msg-delete-btn {
+    position: absolute; top: 4px; right: 4px; background: #FFEBEE; border: none;
+    border-radius: 6px; padding: 2px 6px; font-size: 11px; cursor: pointer;
+    color: #C62828; font-weight: 700; display: none;
+  }
+  .message-bubble:hover .msg-delete-btn { display: block; }
+
+  .chat-input-area {
+    padding: 12px 16px; border-top: 2px solid #F0F0F0; display: flex; gap: 10px;
+    align-items: flex-end; background: white; border-radius: 0 0 var(--radius) var(--radius);
+  }
+  .chat-input {
+    flex: 1; border: 2px solid #E8EAF6; border-radius: 12px; padding: 12px 16px;
+    font-size: 15px; outline: none; resize: none; max-height: 100px;
+    font-family: inherit; transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: #7C4DFF; }
+  .send-btn {
+    background: linear-gradient(135deg, #7C4DFF, #5C35BF); color: white; border: none;
+    border-radius: 12px; width: 48px; height: 48px; font-size: 22px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: transform 0.1s; flex-shrink: 0;
+  }
+  .send-btn:hover { transform: scale(1.05); }
+  .send-btn:active { transform: scale(0.95); }
+  .chat-empty { text-align: center; padding: 40px 20px; color: var(--mid); font-size: 16px; }
+  .chat-notify {
+    background: #FF5252; color: white; font-size: 11px; font-weight: 800;
+    min-width: 18px; height: 18px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center; padding: 0 5px;
+  }
+
+  /* ── GAME ── */
+  .game-container { max-width: 800px; margin: 0 auto; }
+  .game-header { text-align: center; margin-bottom: 24px; }
+  .game-header h2 { font-size: 28px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+  .game-header p { font-size: 16px; color: var(--mid); }
+  .game-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; text-align: center; }
+
+  .scramble-word {
+    font-size: 52px; font-weight: 900; letter-spacing: 8px; color: #7C4DFF;
+    margin: 20px 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+  }
+  .scramble-letter {
+    background: linear-gradient(135deg, #EDE7F6, #D1C4E9); border-radius: 12px;
+    width: 60px; height: 70px; display: flex; align-items: center; justify-content: center;
+    font-size: 36px; font-weight: 900; color: #5C35BF; box-shadow: 0 4px 0 #B39DDB;
+    cursor: pointer; transition: transform 0.1s; user-select: none;
+  }
+  .scramble-letter:hover { transform: translateY(-3px); }
+  .scramble-letter:active { transform: translateY(1px); box-shadow: 0 1px 0 #B39DDB; }
+
+  .game-hint {
+    background: #FFF9C4; border-radius: 12px; padding: 12px 20px; font-size: 15px;
+    color: #795548; font-weight: 600; margin: 16px 0; display: inline-block;
+  }
+  .game-input-row {
+    display: flex; gap: 10px; justify-content: center; margin: 20px 0;
+    max-width: 400px; margin-left: auto; margin-right: auto;
+  }
+  .game-answer-input {
+    flex: 1; border: 3px solid #E8EAF6; border-radius: 12px; padding: 14px 16px;
+    font-size: 18px; font-weight: 700; text-align: center; text-transform: uppercase;
+    letter-spacing: 3px; outline: none; font-family: inherit; transition: border-color 0.2s;
+  }
+  .game-answer-input:focus { border-color: #7C4DFF; }
+  .game-answer-input.correct { border-color: #66BB6A; background: #E8F5E9; }
+  .game-answer-input.wrong { border-color: #EF5350; background: #FFEBEE; animation: shake 0.4s; }
+  @keyframes shake {
+    0%,100% { transform:translateX(0); } 25% { transform:translateX(-8px); } 75% { transform:translateX(8px); }
+  }
+  .btn-check {
+    background: linear-gradient(135deg, #66BB6A, #388E3C); color: white; padding: 14px 24px;
+    border-radius: 12px; font-size: 16px; font-weight: 800; border: none; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102,187,106,0.4); transition: transform 0.1s;
+  }
+  .btn-check:hover { transform: scale(1.03); }
+  .score-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #F8F9FF; border-radius: 12px; padding: 12px 20px;
+    margin-bottom: 20px; border: 2px solid #EDE7F6;
+  }
+  .score-item { text-align: center; }
+  .score-item .score-num { font-size: 28px; font-weight: 900; color: #7C4DFF; line-height: 1; }
+  .score-item .score-label { font-size: 12px; font-weight: 600; color: var(--mid); margin-top: 2px; }
+  .game-result-msg { font-size: 22px; font-weight: 800; margin: 12px 0; min-height: 30px; }
+  .btn-next {
+    background: linear-gradient(135deg, #FFA726, #F57C00); color: white;
+    padding: 12px 28px; border-radius: 12px; font-size: 16px; font-weight: 800;
+    border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(255,167,38,0.4);
+    margin-top: 12px; transition: transform 0.1s;
+  }
+  .btn-next:hover { transform: scale(1.03); }
+
+  .leaderboard { margin-top: 24px; background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .leaderboard-header {
+    background: linear-gradient(135deg, #FFA726, #F57C00); color: white;
+    padding: 14px 20px; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px;
+  }
+  .leaderboard-row {
+    display: flex; align-items: center; padding: 12px 20px;
+    border-bottom: 1px solid #F5F5F5; gap: 12px; transition: background 0.15s;
+  }
+  .leaderboard-row:hover { background: #FAFAFA; }
+  .leaderboard-rank { font-size: 16px; font-weight: 900; min-width: 28px; color: var(--mid); }
+  .leaderboard-rank.first  { color: #F9A825; font-size: 20px; }
+  .leaderboard-rank.second { color: #90A4AE; font-size: 18px; }
+  .leaderboard-rank.third  { color: #A1887F; font-size: 17px; }
+  .leaderboard-name { flex: 1; font-size: 15px; font-weight: 700; color: var(--dark); }
+  .leaderboard-score { font-size: 16px; font-weight: 800; color: #7C4DFF; background: #EDE7F6; padding: 4px 12px; border-radius: 20px; }
+
+  /* ── CLASSMATES ── */
+  .classmates-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px; max-width: 900px; margin: 0 auto;
+  }
+  .classmate-card {
+    background: white; border-radius: var(--radius); padding: 20px 16px;
+    text-align: center; box-shadow: var(--shadow); transition: transform 0.2s;
+  }
+  .classmate-card:hover { transform: translateY(-3px); }
+  .classmate-avatar {
+    width: 64px; height: 64px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 12px;
+  }
+  .classmate-name { font-size: 14px; font-weight: 800; color: var(--dark); }
+  .classmate-stars { font-size: 12px; color: #FFA726; margin-top: 4px; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 3px 9px; border-radius: 20px; margin-top: 6px; background: #EDE7F6; color: #5C35BF;
+  }
+
+  /* ── ADMIN PANEL ── */
+  #panel-admin { max-width: 900px; margin: 0 auto; }
+
+  .admin-banner {
+    background: linear-gradient(135deg, #E65100, #BF360C); color: white;
+    border-radius: var(--radius); padding: 24px 28px; margin-bottom: 28px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .admin-banner .icon { font-size: 40px; }
+  .admin-banner h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .admin-banner p { font-size: 14px; opacity: 0.9; }
+
+  .admin-section {
+    background: white; border-radius: var(--radius); box-shadow: var(--shadow);
+    margin-bottom: 24px; overflow: hidden;
+  }
+  .admin-section-header {
+    padding: 16px 20px; font-size: 16px; font-weight: 800; display: flex;
+    align-items: center; justify-content: space-between; border-bottom: 2px solid #F5F5F5;
+    gap: 10px;
+  }
+  .admin-section-header .left { display: flex; align-items: center; gap: 10px; }
+
+  .admin-stat-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px; padding: 20px;
+  }
+  .admin-stat {
+    background: #F8F9FF; border-radius: 12px; padding: 16px; text-align: center;
+    border: 2px solid #EDE7F6;
+  }
+  .admin-stat .stat-num { font-size: 32px; font-weight: 900; color: #7C4DFF; }
+  .admin-stat .stat-label { font-size: 13px; font-weight: 600; color: var(--mid); margin-top: 4px; }
+
+  .admin-table { width: 100%; border-collapse: collapse; }
+  .admin-table th {
+    background: #F8F9FF; padding: 10px 16px; text-align: left;
+    font-size: 13px; font-weight: 700; color: var(--mid); border-bottom: 2px solid #F0F0F0;
+  }
+  .admin-table td {
+    padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #F5F5F5;
+    vertical-align: middle;
+  }
+  .admin-table tr:last-child td { border-bottom: none; }
+  .admin-table tr:hover td { background: #FAFAFA; }
+
+  .btn-danger {
+    background: #FFEBEE; color: #C62828; border: none; border-radius: 8px;
+    padding: 6px 12px; font-size: 13px; font-weight: 700; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-danger:hover { background: #FFCDD2; }
+
+  .btn-warn {
+    background: #FFF3E0; color: #E65100; border: none; border-radius: 8px;
+    padding: 6px 12px; font-size: 13px; font-weight: 700; cursor: pointer;
+    transition: background 0.2s; margin-right: 6px;
+  }
+  .btn-warn:hover { background: #FFE0B2; }
+
+  .btn-admin-action {
+    background: linear-gradient(135deg, #E65100, #BF360C); color: white; border: none;
+    border-radius: 10px; padding: 10px 18px; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: transform 0.1s;
+  }
+  .btn-admin-action:hover { transform: scale(1.02); }
+
+  .admin-msg-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 16px; border-bottom: 1px solid #F5F5F5; }
+  .admin-msg-row:last-child { border-bottom: none; }
+  .admin-msg-meta { font-size: 12px; color: var(--mid); font-weight: 600; margin-bottom: 3px; }
+  .admin-msg-text { font-size: 14px; color: var(--dark); flex: 1; word-break: break-word; }
+
+  .admin-notice {
+    background: #FFF8E1; border-left: 4px solid #FFB300; border-radius: 0 10px 10px 0;
+    padding: 12px 16px; font-size: 14px; color: #5D4037; font-weight: 600; margin: 16px 20px;
+  }
+
+  .confirm-modal-bg {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .confirm-modal {
+    background: white; border-radius: var(--radius); padding: 28px; max-width: 380px;
+    width: 100%; box-shadow: 0 8px 40px rgba(0,0,0,0.2); text-align: center;
+  }
+  .confirm-modal h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+  .confirm-modal p { font-size: 15px; color: var(--mid); margin-bottom: 24px; line-height: 1.5; }
+  .confirm-btns { display: flex; gap: 12px; }
+  .confirm-btns button { flex: 1; padding: 12px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; border: none; }
+  .confirm-yes { background: linear-gradient(135deg, #EF5350, #C62828); color: white; }
+  .confirm-no  { background: #F5F5F5; color: var(--dark); }
+</style>
+</head>
+<body>
+
+<!-- ══════ LOGIN ══════ -->
+<div id="login-screen" class="screen active">
+  <div class="login-hero">
+    <span class="emoji-stack">🌟</span>
+    <h1>Welcome to Room 3B!</h1>
+    <p>Your awesome class website ✨</p>
+  </div>
+  <div class="login-card">
+    <div class="login-tabs">
+      <div class="login-tab active" onclick="switchLoginTab('login')">🔑 Log In</div>
+      <div class="login-tab" onclick="switchLoginTab('register')">✏️ Sign Up</div>
+    </div>
+
+    <div id="login-form">
+      <h2>👋 Hello! Who are you?</h2>
+      <div class="form-group">
+        <label>Your Username</label>
+        <input type="text" id="login-username" placeholder="e.g. coolkid123" autocomplete="off" autocapitalize="none">
+      </div>
+      <div class="form-group">
+        <label>Your Password</label>
+        <input type="password" id="login-password" placeholder="Your secret password">
+      </div>
+      <button class="btn btn-primary" onclick="doLogin()">🚀 Let's Go!</button>
+      <div class="login-error" id="login-error"></div>
+    </div>
+
+    <div id="register-form" style="display:none">
+      <h2>🎉 Join the Class!</h2>
+      <div class="form-group">
+        <label>Choose a Username</label>
+        <input type="text" id="reg-username" placeholder="e.g. superstar99" autocomplete="off" autocapitalize="none">
+      </div>
+      <div class="form-group">
+        <label>Choose a Password</label>
+        <input type="password" id="reg-password" placeholder="Make it secret!">
+      </div>
+      <div class="form-group">
+        <label>Pick Your Avatar</label>
+        <select id="reg-avatar">
+          <option value="🦁">🦁 Lion</option>
+          <option value="🐸">🐸 Frog</option>
+          <option value="🐧">🐧 Penguin</option>
+          <option value="🦊">🦊 Fox</option>
+          <option value="🐙">🐙 Octopus</option>
+          <option value="🦋">🦋 Butterfly</option>
+          <option value="🐬">🐬 Dolphin</option>
+          <option value="🦄">🦄 Unicorn</option>
+          <option value="🐻">🐻 Bear</option>
+          <option value="🐼">🐼 Panda</option>
+          <option value="🦅">🦅 Eagle</option>
+          <option value="🐲">🐲 Dragon</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="doRegister()">✨ Create My Account!</button>
+      <div class="login-error" id="register-error"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ APP ══════ -->
+<div id="app-screen" class="screen">
+  <div class="topbar">
+    <div class="topbar-left">🌟 <span>Room 3B</span></div>
+    <div class="topbar-right">
+      <div class="user-chip">
+        <span id="topbar-avatar">🦁</span>
+        <span id="topbar-name">Student</span>
+        <span class="admin-badge" id="admin-badge" style="display:none">TEACHER</span>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">👋 Log Out</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs" id="nav-tabs">
+    <div class="nav-tab active" onclick="switchTab('home')" id="tab-home">🏠 Home</div>
+    <div class="nav-tab" onclick="switchTab('chat')" id="tab-chat">
+      💬 Chat
+      <span class="chat-notify" id="chat-badge" style="display:none">!</span>
+    </div>
+    <div class="nav-tab" onclick="switchTab('game')" id="tab-game">🎮 Word Game</div>
+    <div class="nav-tab" onclick="switchTab('classmates')" id="tab-classmates">👫 Classmates</div>
+    <div class="nav-tab admin-tab" onclick="switchTab('admin')" id="tab-admin" style="display:none">🛡️ Admin</div>
+  </div>
+
+  <div class="content">
+
+    <!-- HOME -->
+    <div class="tab-panel active" id="panel-home">
+      <div class="welcome-banner" id="welcome-banner">
+        <h2 id="home-greeting">Hello, Superstar! 👋</h2>
+        <p>What would you like to do today?</p>
+      </div>
+      <div class="home-grid">
+        <div class="home-card purple" onclick="switchTab('chat')">
+          <div class="card-emoji">💬</div>
+          <h3>Class Chat</h3>
+          <p>Talk to your classmates right now!</p>
+        </div>
+        <div class="home-card blue" onclick="switchTab('game')">
+          <div class="card-emoji">🎯</div>
+          <h3>Word Scramble</h3>
+          <p>Unscramble words and earn stars!</p>
+        </div>
+        <div class="home-card green" onclick="switchTab('classmates')">
+          <div class="card-emoji">👫</div>
+          <h3>Classmates</h3>
+          <p>See who's in your class!</p>
+        </div>
+        <div class="home-card orange" onclick="switchTab('game')">
+          <div class="card-emoji">🏆</div>
+          <h3>Leaderboard</h3>
+          <p>Check the top scores!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="tab-panel" id="panel-chat">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="online-dot"></div>
+          💬 Class Chat Room — Room 3B
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-empty">
+            <div style="font-size:40px;margin-bottom:12px">👋</div>
+            <div>No messages yet! Say hello to your classmates!</div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <textarea class="chat-input" id="chat-input" placeholder="Type a message... 😊" rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"
+            oninput="autoResize(this)"></textarea>
+          <button class="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAME -->
+    <div class="tab-panel" id="panel-game">
+      <div class="game-container">
+        <div class="game-header">
+          <h2>🎯 Word Scramble!</h2>
+          <p>Unscramble the letters to spell the word!</p>
+        </div>
+        <div class="game-card">
+          <div class="score-bar">
+            <div class="score-item"><div class="score-num" id="score-num">0</div><div class="score-label">⭐ Stars</div></div>
+            <div class="score-item"><div class="score-num" id="streak-num">0</div><div class="score-label">🔥 Streak</div></div>
+            <div class="score-item"><div class="score-num" id="question-num">1</div><div class="score-label">📝 Word #</div></div>
+          </div>
+          <div class="game-hint" id="game-hint">🔍 Loading...</div>
+          <div class="scramble-word" id="scramble-display"></div>
+          <div class="game-result-msg" id="game-result"></div>
+          <div class="game-input-row">
+            <input type="text" class="game-answer-input" id="game-answer" placeholder="TYPE HERE"
+              onkeydown="if(event.key==='Enter') checkAnswer()">
+            <button class="btn-check" onclick="checkAnswer()">✓ Check!</button>
+          </div>
+          <button class="btn-next" onclick="nextWord()" id="btn-skip">⏭ Skip Word</button>
+        </div>
+        <div class="leaderboard">
+          <div class="leaderboard-header">🏆 Top Scorers in Room 3B</div>
+          <div id="leaderboard-rows"><div style="padding:20px;text-align:center;color:#90A4AE;font-size:14px">No scores yet — be the first to play!</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLASSMATES -->
+    <div class="tab-panel" id="panel-classmates">
+      <div style="text-align:center;margin-bottom:24px">
+        <h2 style="font-size:26px;font-weight:800;color:#2C3E50">👫 Our Classroom</h2>
+        <p style="color:#546E7A;font-size:16px;margin-top:6px">Everyone in Room 3B!</p>
+      </div>
+      <div class="classmates-grid" id="classmates-grid">
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:#90A4AE">No classmates yet — sign up to join!</div>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="tab-panel" id="panel-admin">
+      <div class="admin-banner">
+        <div class="icon">🛡️</div>
+        <div>
+          <h2>Teacher Admin Panel</h2>
+          <p>Manage students, messages, and scores</p>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <div class="left">📊 Overview</div>
+          <button class="btn-admin-action" onclick="refreshAdmin()">🔄 Refresh</button>
+        </div>
+        <div class="admin-stat-grid">
+          <div class="admin-stat"><div class="stat-num" id="stat-students">0</div><div class="stat-label">👫 Students</div></div>
+          <div class="admin-stat"><div class="stat-num" id="stat-messages">0</div><div class="stat-label">💬 Messages</div></div>
+          <div class="admin-stat"><div class="stat-num" id="stat-top-score">0</div><div class="stat-label">🏆 Top Score</div></div>
+          <div class="admin-stat"><div class="stat-num" id="stat-players">0</div><div class="stat-label">🎮 Players</div></div>
+        </div>
+      </div>
+
+      <!-- Manage Students -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <div class="left">👫 Manage Students</div>
+          <button class="btn-danger" onclick="confirmAction('Clear ALL scores?','This will reset everyone\'s game scores to zero.',resetAllScores)">🗑️ Reset All Scores</button>
+        </div>
+        <div class="admin-notice">⚠️ Removing a student deletes their account. They can re-register anytime.</div>
+        <table class="admin-table" id="admin-students-table">
+          <thead><tr><th>Avatar</th><th>Username</th><th>Game Score</th><th>Joined</th><th>Actions</th></tr></thead>
+          <tbody id="admin-students-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Manage Messages -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <div class="left">💬 Recent Messages</div>
+          <button class="btn-danger" onclick="confirmAction('Clear ALL messages?','This will permanently delete the entire chat history.',clearAllMessages)">🗑️ Clear All Chat</button>
+        </div>
+        <div id="admin-messages-list"></div>
+      </div>
+
+      <!-- Change Admin Password -->
+      <div class="admin-section">
+        <div class="admin-section-header"><div class="left">🔐 Change Admin Password</div></div>
+        <div style="padding:20px;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+          <div class="form-group" style="flex:1;min-width:200px;margin:0">
+            <label>New Password</label>
+            <input type="password" id="new-admin-pw" placeholder="Enter new password">
+          </div>
+          <div class="form-group" style="flex:1;min-width:200px;margin:0">
+            <label>Confirm Password</label>
+            <input type="password" id="confirm-admin-pw" placeholder="Repeat new password">
+          </div>
+          <button class="btn-admin-action" onclick="changeAdminPassword()" style="height:48px;margin-top:auto">Save Password</button>
+        </div>
+        <div id="pw-change-msg" style="padding:0 20px 16px;font-size:14px;font-weight:600;display:none"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="confirm-modal-bg" id="confirm-modal" style="display:none" onclick="if(event.target===this)closeConfirm()">
+  <div class="confirm-modal">
+    <div style="font-size:40px;margin-bottom:12px" id="confirm-icon">⚠️</div>
+    <h3 id="confirm-title">Are you sure?</h3>
+    <p id="confirm-msg">This action cannot be undone.</p>
+    <div class="confirm-btns">
+      <button class="confirm-no" onclick="closeConfirm()">✗ Cancel</button>
+      <button class="confirm-yes" id="confirm-yes-btn" onclick="runConfirm()">✓ Yes, do it!</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════ CONFIG ══════════════
+// Change ADMIN_USERNAME and ADMIN_PASSWORD to your preferred credentials
+const ADMIN_USERNAME = 'teacher';
+const ADMIN_DEFAULT_PASSWORD = 'teach123';
+
+// ══════════════ WORDS ══════════════
+const WORDS = [
+  { word: "TIGER", hint: "🔍 A big animal with orange stripes" },
+  { word: "APPLE", hint: "🔍 A red or green fruit you eat" },
+  { word: "HAPPY", hint: "🔍 How you feel when something is fun" },
+  { word: "CLOUD", hint: "🔍 White fluffy things in the sky" },
+  { word: "DANCE", hint: "🔍 Moving your body to music" },
+  { word: "FROG",  hint: "🔍 A green jumping amphibian" },
+  { word: "STARS", hint: "🔍 They shine bright at night" },
+  { word: "BREAD", hint: "🔍 You make sandwiches with this" },
+  { word: "CHAIR", hint: "🔍 You sit on this" },
+  { word: "BEACH", hint: "🔍 Where you find sand and waves" },
+  { word: "MUSIC", hint: "🔍 Songs and instruments make this" },
+  { word: "PLANT", hint: "🔍 It grows and needs water" },
+  { word: "BRAVE", hint: "🔍 Not being afraid" },
+  { word: "DREAM", hint: "🔍 What happens when you sleep" },
+  { word: "SMILE", hint: "🔍 What your face does when happy" },
+  { word: "TRAIN", hint: "🔍 It rides on tracks" },
+  { word: "OCEAN", hint: "🔍 A very big body of water" },
+  { word: "CANDY", hint: "🔍 Sweet treat kids love" },
+  { word: "SWING", hint: "🔍 Fun thing at the playground" },
+  { word: "PIANO", hint: "🔍 A musical instrument with keys" },
+  { word: "HORSE", hint: "🔍 You can ride this animal" },
+  { word: "PIZZA", hint: "🔍 Yummy round food with toppings" },
+  { word: "ROBOT", hint: "🔍 A machine that can move" },
+  { word: "LUNCH", hint: "🔍 The meal you eat at noon" },
+  { word: "GRAPE", hint: "🔍 Small purple fruit in bunches" },
+];
+
+// ══════════════ STORAGE ══════════════
+function getUsers()    { return JSON.parse(localStorage.getItem('room3b_users')    || '{}'); }
+function saveUsers(u)  { localStorage.setItem('room3b_users', JSON.stringify(u)); }
+function getMessages() { return JSON.parse(localStorage.getItem('room3b_messages') || '[]'); }
+function saveMessages(m){ localStorage.setItem('room3b_messages', JSON.stringify(m)); }
+function getScores()   { return JSON.parse(localStorage.getItem('room3b_scores')   || '{}'); }
+function saveScores(s) { localStorage.setItem('room3b_scores', JSON.stringify(s)); }
+function getAdminPw()  { return localStorage.getItem('room3b_adminpw') || btoa(ADMIN_DEFAULT_PASSWORD); }
+
+let currentUser = null;
+let currentScore = 0, currentStreak = 0, wordCount = 0;
+let currentWord = '', scrambled = '';
+let chatInterval = null, lastMsgCount = 0;
+let confirmCallback = null;
+
+// ══════════════ AUTH ══════════════
+function switchLoginTab(tab) {
+  document.querySelectorAll('.login-tab').forEach((t,i) =>
+    t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register')));
+  document.getElementById('login-form').style.display   = tab==='login'    ? '' : 'none';
+  document.getElementById('register-form').style.display = tab==='register' ? '' : 'none';
+}
+
+function doLogin() {
+  const u = document.getElementById('login-username').value.trim().toLowerCase();
+  const p = document.getElementById('login-password').value;
+  const err = document.getElementById('login-error');
+  if (!u || !p) { showErr(err, '⚠️ Please fill in both fields!'); return; }
+
+  // Admin login
+  if (u === ADMIN_USERNAME) {
+    if (btoa(p) !== getAdminPw()) { showErr(err, '🔒 Wrong admin password!'); return; }
+    err.style.display = 'none';
+    currentUser = { username: ADMIN_USERNAME, avatar: '🛡️', isAdmin: true };
+    launchApp();
+    return;
+  }
+
+  const users = getUsers();
+  if (!users[u])             { showErr(err, '😕 Username not found! Did you sign up?'); return; }
+  if (users[u].password !== btoa(p)) { showErr(err, '🔒 Wrong password! Try again.'); return; }
+  err.style.display = 'none';
+  currentUser = { username: u, ...users[u], isAdmin: false };
+  launchApp();
+}
+
+function doRegister() {
+  const u  = document.getElementById('reg-username').value.trim().toLowerCase();
+  const p  = document.getElementById('reg-password').value;
+  const av = document.getElementById('reg-avatar').value;
+  const err = document.getElementById('register-error');
+  if (!u || !p)            { showErr(err, '⚠️ Please fill in all fields!'); return; }
+  if (u.length < 3)        { showErr(err, '⚠️ Username needs at least 3 letters!'); return; }
+  if (p.length < 4)        { showErr(err, '⚠️ Password needs at least 4 characters!'); return; }
+  if (!/^[a-z0-9_]+$/.test(u)) { showErr(err, '⚠️ Only letters, numbers, and _ allowed!'); return; }
+  if (u === ADMIN_USERNAME) { showErr(err, '⚠️ That username is reserved!'); return; }
+  const users = getUsers();
+  if (users[u])            { showErr(err, '😅 That username is taken! Try another.'); return; }
+  users[u] = { password: btoa(p), avatar: av, joined: Date.now() };
+  saveUsers(users);
+  err.style.display = 'none';
+  currentUser = { username: u, avatar: av, isAdmin: false };
+  launchApp();
+}
+
+function showErr(el, msg) { el.textContent = msg; el.style.display = 'block'; }
+
+function doLogout() {
+  currentUser = null;
+  clearInterval(chatInterval);
+  document.getElementById('login-screen').classList.add('active');
+  document.getElementById('app-screen').classList.remove('active');
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+// ══════════════ APP LAUNCH ══════════════
+function launchApp() {
+  document.getElementById('login-screen').classList.remove('active');
+  document.getElementById('app-screen').classList.add('active');
+
+  document.getElementById('topbar-name').textContent = currentUser.username;
+  document.getElementById('topbar-avatar').textContent = currentUser.avatar;
+
+  if (currentUser.isAdmin) {
+    document.getElementById('admin-badge').style.display = 'inline';
+    document.getElementById('tab-admin').style.display = 'flex';
+    document.getElementById('welcome-banner').style.background = 'linear-gradient(135deg, #E65100, #BF360C)';
+    document.getElementById('home-greeting').textContent = `Welcome back, Teacher! 🛡️`;
+  } else {
+    document.getElementById('admin-badge').style.display = 'none';
+    document.getElementById('tab-admin').style.display = 'none';
+    document.getElementById('welcome-banner').style.background = 'linear-gradient(135deg, #7C4DFF, #2979FF)';
+    document.getElementById('home-greeting').textContent = `Hello, ${currentUser.username}! ${currentUser.avatar}`;
+  }
+
+  currentScore = 0; currentStreak = 0; wordCount = 0;
+  document.getElementById('score-num').textContent = '0';
+  document.getElementById('streak-num').textContent = '0';
+  document.getElementById('question-num').textContent = '1';
+
+  switchTab('home');
+  nextWord();
+  loadClassmates();
+  renderLeaderboard();
+  loadChat();
+  clearInterval(chatInterval);
+  chatInterval = setInterval(pollChat, 2000);
+}
+
+// ══════════════ TABS ══════════════
+function switchTab(name) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+  if (name === 'chat') {
+    document.getElementById('chat-badge').style.display = 'none';
+    lastMsgCount = getMessages().length;
+    loadChat();
+    setTimeout(() => { const m = document.getElementById('chat-messages'); m.scrollTop = m.scrollHeight; }, 100);
+  }
+  if (name === 'classmates') loadClassmates();
+  if (name === 'game')       renderLeaderboard();
+  if (name === 'admin')      refreshAdmin();
+}
+
+// ══════════════ CHAT ══════════════
+function loadChat() {
+  const messages = getMessages();
+  const container = document.getElementById('chat-messages');
+  if (messages.length === 0) {
+    container.innerHTML = `<div class="chat-empty"><div style="font-size:40px;margin-bottom:12px">👋</div><div>No messages yet! Say hello to your classmates!</div></div>`;
+    return;
+  }
+  const atBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 60;
+  const isAdmin = currentUser?.isAdmin;
+  container.innerHTML = messages.map((msg, idx) => {
+    const mine = msg.user === currentUser?.username;
+    const t = new Date(msg.time);
+    const ts = t.getHours().toString().padStart(2,'0') + ':' + t.getMinutes().toString().padStart(2,'0');
+    const canDelete = mine || isAdmin;
+    return `<div class="message ${mine?'mine':''}">
+      <div class="message-avatar">${msg.avatar}</div>
+      <div>
+        ${!mine ? `<div class="message-name">${msg.user}</div>` : ''}
+        <div class="message-bubble">
+          ${canDelete ? `<button class="msg-delete-btn" onclick="deleteMessage(${idx})" title="Delete">✕</button>` : ''}
+          <div class="message-text">${escHtml(msg.text)}</div>
+          <div class="message-time">${ts}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  if (atBottom || messages[messages.length-1]?.user === currentUser?.username) {
+    container.scrollTop = container.scrollHeight;
+  }
+}
+
+function deleteMessage(idx) {
+  const msgs = getMessages();
+  msgs.splice(idx, 1);
+  saveMessages(msgs);
+  loadChat();
+}
+
+function pollChat() {
+  const msgs = getMessages();
+  const panel = document.getElementById('panel-chat');
+  if (!panel.classList.contains('active')) {
+    if (msgs.length > lastMsgCount) document.getElementById('chat-badge').style.display = 'flex';
+  } else {
+    loadChat();
+    lastMsgCount = msgs.length;
+  }
+}
+
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  if (text.length > 500) { alert('Message too long!'); return; }
+  const messages = getMessages();
+  messages.push({ user: currentUser.username, avatar: currentUser.avatar, text, time: Date.now() });
+  if (messages.length > 200) messages.splice(0, messages.length - 200);
+  saveMessages(messages);
+  input.value = ''; input.style.height = '';
+  lastMsgCount = messages.length;
+  loadChat();
+}
+
+function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 100) + 'px'; }
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+}
+
+// ══════════════ GAME ══════════════
+function scrambleWord(word) {
+  const arr = word.split(''); let sc, attempts = 0;
+  do {
+    for (let i = arr.length-1; i > 0; i--) {
+      const j = Math.floor(Math.random()*(i+1)); [arr[i],arr[j]] = [arr[j],arr[i]];
+    }
+    sc = arr.join(''); attempts++;
+  } while (sc === word && attempts < 20);
+  return sc;
+}
+
+function nextWord() {
+  const entry = WORDS[Math.floor(Math.random()*WORDS.length)];
+  currentWord = entry.word;
+  scrambled = scrambleWord(currentWord);
+  wordCount++;
+  document.getElementById('game-hint').textContent = entry.hint;
+  document.getElementById('question-num').textContent = wordCount;
+  document.getElementById('game-result').textContent = '';
+  document.getElementById('scramble-display').innerHTML = scrambled.split('').map(l =>
+    `<div class="scramble-letter">${l}</div>`).join('');
+  const input = document.getElementById('game-answer');
+  input.value = ''; input.className = 'game-answer-input'; input.focus();
+  document.getElementById('btn-skip').textContent = '⏭ Skip Word';
+}
+
+function checkAnswer() {
+  const input = document.getElementById('game-answer');
+  const ans = input.value.trim().toUpperCase();
+  const resultEl = document.getElementById('game-result');
+  if (!ans) return;
+  if (ans === currentWord) {
+    currentScore += 10 + (currentStreak * 2); currentStreak++;
+    input.className = 'game-answer-input correct';
+    let msg = '⭐ Correct! +' + (10 + (currentStreak-1)*2) + ' stars!';
+    if (currentStreak >= 3) msg = '🔥 ' + currentStreak + ' in a row! ' + msg;
+    resultEl.textContent = msg; resultEl.style.color = '#388E3C';
+    document.getElementById('score-num').textContent = currentScore;
+    document.getElementById('streak-num').textContent = currentStreak;
+    const scores = getScores();
+    if (currentScore > (scores[currentUser.username]||0)) { scores[currentUser.username] = currentScore; saveScores(scores); }
+    renderLeaderboard();
+    document.getElementById('btn-skip').textContent = '➡️ Next Word!';
+    setTimeout(() => nextWord(), 1600);
+  } else {
+    currentStreak = 0; document.getElementById('streak-num').textContent = '0';
+    input.className = 'game-answer-input wrong';
+    resultEl.textContent = '❌ Not quite! Try again!'; resultEl.style.color = '#C62828';
+    setTimeout(() => { input.className = 'game-answer-input'; resultEl.textContent = ''; }, 1200);
+    input.select();
+  }
+}
+
+function renderLeaderboard() {
+  const scores = getScores(), users = getUsers();
+  const sorted = Object.entries(scores).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const el = document.getElementById('leaderboard-rows');
+  if (!sorted.length) { el.innerHTML = `<div style="padding:20px;text-align:center;color:#90A4AE;font-size:14px">No scores yet!</div>`; return; }
+  const medals=['🥇','🥈','🥉'], rc=['first','second','third'];
+  el.innerHTML = sorted.map(([name,score],i) => {
+    const av = users[name]?.avatar || '⭐';
+    const isMe = name === currentUser?.username;
+    return `<div class="leaderboard-row" style="${isMe?'background:#F3E5F5':''}">
+      <div class="leaderboard-rank ${rc[i]||''}">${medals[i]||i+1}</div>
+      <div class="message-avatar" style="width:32px;height:32px;font-size:16px">${av}</div>
+      <div class="leaderboard-name">${escHtml(name)}${isMe?' (you)':''}</div>
+      <div class="leaderboard-score">${score} ⭐</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════ CLASSMATES ══════════════
+function loadClassmates() {
+  const users = getUsers(), scores = getScores();
+  const grid = document.getElementById('classmates-grid');
+  const names = Object.keys(users);
+  if (!names.length) { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:#90A4AE">No classmates yet!</div>`; return; }
+  const colors = ['#EDE7F6','#E3F2FD','#E8F5E9','#FFF9C4','#FCE4EC','#E0F2F1'];
+  grid.innerHTML = names.map((name,i) => {
+    const u = users[name], score = scores[name]||0;
+    const stars = score>=100?'🌟🌟🌟':score>=50?'⭐⭐':score>=10?'⭐':'';
+    const badge = score>=100?'Word Master':score>=50?'Star Player':score>=10?'Getting Started':'New Member';
+    const isMe = name === currentUser?.username;
+    return `<div class="classmate-card" style="${isMe?'border:2px solid #7C4DFF':''}">
+      <div class="classmate-avatar" style="background:${colors[i%colors.length]}">${u.avatar||'⭐'}</div>
+      <div class="classmate-name">${escHtml(name)}${isMe?' 👈':''}</div>
+      <div class="classmate-stars">${stars||'🌱 Just joined'}</div>
+      <div class="badge">${badge}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════ ADMIN ══════════════
+function refreshAdmin() {
+  const users = getUsers(), messages = getMessages(), scores = getScores();
+  const names = Object.keys(users);
+  const scoreVals = Object.values(scores);
+
+  document.getElementById('stat-students').textContent = names.length;
+  document.getElementById('stat-messages').textContent = messages.length;
+  document.getElementById('stat-top-score').textContent = scoreVals.length ? Math.max(...scoreVals) : 0;
+  document.getElementById('stat-players').textContent = Object.keys(scores).length;
+
+  // Students table
+  const tbody = document.getElementById('admin-students-body');
+  if (!names.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#90A4AE">No students yet</td></tr>`;
+  } else {
+    tbody.innerHTML = names.map(name => {
+      const u = users[name];
+      const score = scores[name] || 0;
+      const joined = u.joined ? new Date(u.joined).toLocaleDateString() : 'Unknown';
+      return `<tr>
+        <td style="font-size:22px">${u.avatar||'⭐'}</td>
+        <td style="font-weight:700">${escHtml(name)}</td>
+        <td><span style="background:#EDE7F6;color:#5C35BF;padding:3px 10px;border-radius:20px;font-weight:700">${score} ⭐</span></td>
+        <td style="color:var(--mid)">${joined}</td>
+        <td>
+          <button class="btn-warn" onclick="confirmAction('Reset score for ${escHtml(name)}?','Their game score will be set to zero.',()=>resetScore('${name}'))">Reset Score</button>
+          <button class="btn-danger" onclick="confirmAction('Remove student ${escHtml(name)}?','Their account will be deleted. They can re-register anytime.',()=>removeStudent('${name}'))">Remove</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Messages list (last 30)
+  const msgEl = document.getElementById('admin-messages-list');
+  const recent = messages.slice(-30).reverse();
+  if (!recent.length) {
+    msgEl.innerHTML = `<div style="padding:20px;text-align:center;color:#90A4AE">No messages yet</div>`;
+  } else {
+    msgEl.innerHTML = recent.map((msg, i) => {
+      const realIdx = messages.length - 1 - i;
+      const t = new Date(msg.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+      const d = new Date(msg.time).toLocaleDateString();
+      return `<div class="admin-msg-row">
+        <div style="font-size:20px">${msg.avatar}</div>
+        <div style="flex:1">
+          <div class="admin-msg-meta">${escHtml(msg.user)} · ${d} ${t}</div>
+          <div class="admin-msg-text">${escHtml(msg.text)}</div>
+        </div>
+        <button class="btn-danger" onclick="confirmAction('Delete this message?','This message will be permanently removed.',()=>deleteMessage(${realIdx}));refreshAdmin()">Delete</button>
+      </div>`;
+    }).join('');
+  }
+}
+
+function removeStudent(username) {
+  const users = getUsers();
+  delete users[username];
+  saveUsers(users);
+  const scores = getScores();
+  delete scores[username];
+  saveScores(scores);
+  refreshAdmin();
+  loadClassmates();
+  renderLeaderboard();
+}
+
+function resetScore(username) {
+  const scores = getScores();
+  delete scores[username];
+  saveScores(scores);
+  refreshAdmin();
+  renderLeaderboard();
+}
+
+function resetAllScores() {
+  saveScores({});
+  refreshAdmin();
+  renderLeaderboard();
+}
+
+function clearAllMessages() {
+  saveMessages([]);
+  loadChat();
+  refreshAdmin();
+}
+
+function changeAdminPassword() {
+  const np = document.getElementById('new-admin-pw').value;
+  const cp = document.getElementById('confirm-admin-pw').value;
+  const msgEl = document.getElementById('pw-change-msg');
+  if (!np || !cp) { msgEl.textContent = '⚠️ Please fill in both fields.'; msgEl.style.color='#C62828'; msgEl.style.display='block'; return; }
+  if (np.length < 6) { msgEl.textContent = '⚠️ Password must be at least 6 characters.'; msgEl.style.color='#C62828'; msgEl.style.display='block'; return; }
+  if (np !== cp) { msgEl.textContent = '⚠️ Passwords do not match!'; msgEl.style.color='#C62828'; msgEl.style.display='block'; return; }
+  localStorage.setItem('room3b_adminpw', btoa(np));
+  document.getElementById('new-admin-pw').value = '';
+  document.getElementById('confirm-admin-pw').value = '';
+  msgEl.textContent = '✅ Admin password updated successfully!';
+  msgEl.style.color = '#388E3C';
+  msgEl.style.display = 'block';
+  setTimeout(() => msgEl.style.display='none', 3000);
+}
+
+// ══════════════ CONFIRM MODAL ══════════════
+function confirmAction(title, msg, callback) {
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-msg').textContent = msg;
+  confirmCallback = callback;
+  document.getElementById('confirm-modal').style.display = 'flex';
+}
+function runConfirm() { closeConfirm(); if (confirmCallback) confirmCallback(); confirmCallback = null; }
+function closeConfirm() { document.getElementById('confirm-modal').style.display = 'none'; }
+
+// ══════════════ ENTER KEYS ══════════════
+document.getElementById('login-password').addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
+document.getElementById('reg-password').addEventListener('keydown',   e => { if (e.key==='Enter') doRegister(); });
+</script>
+</body>
+</html>
